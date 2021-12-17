@@ -1,0 +1,8 @@
+datpt	0211	1
+nam	123	0
+tuananh	123	0
+huyen	2323	1
+dat	123	0
+test	123	0
+test1	123	0
+hehe	hihi	0
