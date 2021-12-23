@@ -6,6 +6,7 @@
 #include <netinet/in.h>
 #include <unistd.h> 
 #include <arpa/inet.h>
+#include <stdbool.h>
 
 #include "menu.h"
 #include "handle.h"
@@ -20,6 +21,11 @@ void menuPlay(int sockfd, char *username, char *password){
     char question[MAXLINE + 1]="\0";
     char answer[MAXLINE + 1]="\0";
     char request[MAXLINE + 1]="\0";
+    char sumuser[10]="\0";
+    char name[MAXLINE + 1]="\0";
+    char round[MAXLINE + 1]="\0";
+    int countround = 1;
+    int check = 1;
     do{
         //system("clear");
         printf("\n\n=========CHIEC NON KI DIEU=========\n\n");
@@ -35,35 +41,82 @@ void menuPlay(int sockfd, char *username, char *password){
             case 1:
                 //system("clear");
                 strcpy(buffer,"\0");
-                strcat(buffer,"Choi:1#@");
+                strcat(buffer,"Choi:");
+                strcat(buffer,username);
+                strcat(buffer,"#");
                 send(sockfd,buffer,strlen(buffer),0);
-                n = recv(sockfd, receiveLine, MAXLINE, 0);
-                receiveLine[n] = '\0'; //null terminate 
-                CutQuiz(receiveLine,question,answer,request); 
-                if(strcmp(request,"bat dau")==0){
-                    while(1){
-                        strcpy(buffer,"\0");
-                        strcpy(answer,"\0");
-                        EnterAnswer(answer);
-                        strcat(buffer,"Choi:");
-                        strcat(buffer,question);
-                        strcat(buffer,"#");
-                        strcat(buffer,answer);
-                        strcat(buffer,"#@");
-                        send(sockfd,buffer,strlen(buffer),0);
-                        n = recv(sockfd, receiveLine, MAXLINE, 0);
-                        receiveLine[n] = '\0'; //null terminate 
-                        CutQuiz(receiveLine,question,answer,request); 
-                        if(strcmp(request,"100")==0){
-                            printf("Ban tra loi chinh xac\n");
-                            break;
-                        }else if(strcmp(request,"-100")==0){
-                            printf("Ban tra loi sai\n");
-                        }else{
-                            printf("So chu dung: %s\n",request);
-                        }
+                do{
+                    n = recv(sockfd, receiveLine, MAXLINE, 0);
+                    receiveLine[n] = '\0'; //null terminate 
+                    CutWait(receiveLine,sumuser,name,request);
+                    int a = atoi(sumuser);
+                    if(strcmp(request,"Doi")==0){
+                        printf("Hay doi %d nguoi tham gia phong\n",(3-a));
+                    }else if(strcmp(request,"OK")==0){
+                        printf("Phong da du nguoi\n");
+                        do{
+                            strcpy(buffer,"\0");
+                            strcat(buffer,"San sang:");
+                            sprintf(round,"%d",countround);
+                            strcat(buffer,round);
+                            send(sockfd,buffer,strlen(buffer),0);
+                            do{
+                                n = recv(sockfd, receiveLine, MAXLINE, 0);
+                                receiveLine[n] = '\0'; //null terminate 
+                                CutQuiz(receiveLine,question,answer,request,name);
+                                if(strcmp(name,username)==0){
+                                    //while(1){
+                                        if(strcmp(request,"100")==0){
+                                            printf("Dap an cuoi cung chinh xac\n");
+                                            break;
+                                        }else if(strcmp(request,"-100")==0){
+                                            printf("Dap an cuoi cung sai\n");
+                                            
+                                        }else if(strcmp(request,"10")==0){
+                                            printf("Hay nhap cau tra loi cua ban\n");
+                                        }else if(strcmp(request,"0")==0){
+                                            printf("Ban khong tra loi chinh xac chu cai nao\n");
+                                            
+                                        }else{
+                                            printf("So chu giong: %s\n",request);
+                                        }
+
+                                        printf("\n");
+                                        strcpy(buffer,"\0");
+                                        strcpy(answer,"\0");
+                                        EnterAnswer(answer);
+                                        strcat(buffer,"Tra loi:");
+                                        strcat(buffer,question);
+                                        strcat(buffer,"#");
+                                        strcat(buffer,answer);
+                                        strcat(buffer,"#");
+                                        strcat(buffer,username);
+                                        strcat(buffer,"#@");
+                                        send(sockfd,buffer,strlen(buffer),0);
+                                        
+                                    //}
+                                }else{
+                                    if(strcmp(request,"100")==0){
+                                        printf("%s tra loi dap an cuoi cung chinh xac\n",name);
+                                        break;
+                                    }else if(strcmp(request,"-100")==0){
+                                        printf("%s tra loi dap an cuoi cung sai\n",name);
+                                    }else if(strcmp(request,"10")==0){
+                                        printf("\n");
+                                    }else if(strcmp(request,"0")==0){
+                                        printf("Khong tra loi chinh xac chu cai nao\n");
+                                    }else{
+                                        printf("%s: So chu giong: %s\n",name,request);
+                                    }
+                                    printf("Hay doi den luot cua ban\n");
+                                }
+                                
+                            }while(strcmp(request,"100")!=0);
+                            countround++;//next round
+                        }while(countround<=3);  
+                        if(countround == 4) check = 0;
                     }
-                }
+                }while(check!=0);
             break;
             case 2:
                 strcpy(buffer,"\0");
@@ -119,13 +172,15 @@ void menuLogin(int sockfd){
                 receiveLine[n] = '\0'; //null terminate  
                 //printf("%s\n",receiveLine);
                 if(strcmp(receiveLine,"1") == 0){
-                    printf("Dang nhap thanh cong\n");
                     menuPlay(sockfd,username,password);
+                    sleep(2);
                     break;             
                 }else if(strcmp(receiveLine,"-1") == 0){
                     printf("Sai mat khau\n");
+                    sleep(2);
                 }else if(strcmp(receiveLine,"0") == 0){
                     printf("Khong tim thay tai khoan\n");
+                    sleep(2);
                 }
             } 
                 break;    
@@ -143,7 +198,7 @@ void menuLogin(int sockfd){
                     strcat(buffer,username);
                     strcat(buffer," ");
                     strcat(buffer,password);
-                    strcat(buffer," 0");
+                    check = strcmp(password,checkpassword);
                     if(check == 0){
                         send(sockfd, buffer, strlen(buffer), 0);
                         n = recv(sockfd, receiveLine, MAXLINE, 0);
@@ -154,6 +209,8 @@ void menuLogin(int sockfd){
                         }else if(strcmp(receiveLine,"-1")==0){
                             printf("Da ton tai nguoi dung nay\n");
                         } 
+                    }else{
+                         printf("Mat khau nhap lai bi sai\n");
                     }
                 }
                 break;

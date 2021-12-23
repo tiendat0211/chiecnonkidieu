@@ -1,14 +1,16 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <ctype.h>
 
 #include "question.h"
 
 
-Question createQuiz(char *question, char *answer) {
+Question createQuiz(char *question, char *answer,char* hidden) {
   Question data;
   strcpy(data.question, question);
   strcpy(data.answer, answer);
+  strcpy(data.hidden, hidden);
   return data;
 }
 
@@ -74,9 +76,18 @@ Question getDataQuiz(Quiz head, int index){
 }
 
 
+void hiddenAnswer(char *s,char*temp){
+  for(int i =0; i<strlen(s);i++){
+      if(s[i] != ' ' ) temp[i]='*';
+      else temp[i]=' ';
+  }
+  temp[strlen(s)] = '\0';
+}
+
 Quiz readfile(char *fileName) {
     char question[200],answer[100];
-    char buff[200];
+    char hidden[100]="\0";
+    char buff[2000];
     char *c;
     Question data;
   FILE *f = fopen(fileName, "r");
@@ -94,9 +105,10 @@ Quiz readfile(char *fileName) {
           c = strtok(buff,"#");
           strcpy(question,c);
           c = strtok(NULL,"#");
-          strcpy(answer,c);
+          strcpy(answer,c);strcpy(hidden,"\0");
+          hiddenAnswer(answer,hidden);
         }
-        data = createQuiz(question,answer);
+        data = createQuiz(question,answer,hidden);
         head = addTailQuiz(head, data);
     }
   fclose(f);
@@ -108,7 +120,8 @@ void printQuiz(Quiz head){
     Quiz p = head;
     while(NULL!=p){
         printf("%s,",p->data.question);
-        printf("%s\n",p->data.answer);
+        printf("%s,",p->data.answer);
+        printf("%s\n",p->data.hidden);
         p = p->next;
     }
     printf("\n");
@@ -133,4 +146,15 @@ int checkQuiz(Quiz head, char *s) {
     ++position;
   }
   return -1;
+}
+
+Quiz updateQuizAt(Quiz head, int index, Question newData) {
+  int k = 0;
+  Quiz p = head;
+  while(p->next != NULL && k != index) {
+    ++k;
+    p = p->next;
+  }
+  p->data = newData;
+  return head;
 }

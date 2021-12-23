@@ -4,7 +4,10 @@
 typedef struct {
   char username[100];
   char password[100];
-  char isSignIn[100];
+  int isSignIn;
+  int score;
+  int turn;
+  int sumfalse;
 }Data;
 
 struct User{
@@ -13,7 +16,7 @@ struct User{
 };
 typedef struct User *Node;
 
-Data createData(char *username, char *password,char *isSignIn);
+Data createData(char *username, char *password,int isSignIn,int score, int turn, int sumfalse);
 Node setup(char *fileName);
 Node createNode(Data data);
 Node init();
@@ -28,4 +31,9 @@ void writeFile(Node head, char *fileName);
 void destroy(Node head);
 int checkPassword(Node head, char*username,char* password);
 void printList(Node head);
+int sumSingin(Node head);
+void reset(Data data);
+void userplay(Data play[]);
+
+
 #endif

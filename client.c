@@ -1,11 +1,13 @@
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-#include <netdb.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
+#include <stdio.h> 
+#include <sys/socket.h> 
+#include <stdlib.h> 
+#include <netinet/in.h> 
+#include <string.h> 
+#include <sys/types.h>
+#include <unistd.h>
+#include <sys/wait.h>
 #include <arpa/inet.h>
-#include <unistd.h> 
+#include <termios.h>
 #include <stdbool.h>
 
 #include "handle.h"
@@ -18,34 +20,28 @@
 
 int main(int argc, char* argv[])
 {
-    int sockfd;
-    struct sockaddr_in servaddr;
+    int sock;  
+    struct sockaddr_in sAddr;
 
-   
-    // socket create and varification
-    sockfd = socket(AF_INET, SOCK_STREAM, 0);
-    if (sockfd == -1) {
-        printf("socket creation failed...\n");
-        exit(0);
-    }
-    else
-        printf("Socket successfully created..\n");
-    bzero(&servaddr, sizeof(servaddr));
-   
-    // assign IP, PORT
-    servaddr.sin_family = AF_INET;
-    servaddr.sin_addr.s_addr = inet_addr(argv[1]);
-    servaddr.sin_port = htons(atoi(argv[2]));
-   
-    // connect the client socket to server socket
-    if (connect(sockfd, (SA*)&servaddr, sizeof(servaddr)) != 0) {
-        printf("connection with the server failed...\n");
-        exit(0);
-    }
-    else
-        printf("connected to the server..\n");
-    printf("\n");
-   
-        menuLogin(sockfd);
+    memset((void *) &sAddr, 0, sizeof(struct sockaddr_in));
+	sAddr.sin_family = AF_INET;
+	sAddr.sin_addr.s_addr = INADDR_ANY;
+	sAddr.sin_port = 0;
 
+	sock = socket(AF_INET, SOCK_STREAM, 0);
+	bind(sock, (const struct sockaddr *) &sAddr, sizeof(sAddr));
+
+	sAddr.sin_addr.s_addr = inet_addr(argv[1]);
+	sAddr.sin_port = htons(atoi(argv[2]));
+	if (connect(sock, (const struct sockaddr *) &sAddr, sizeof(sAddr)) != 0) 
+	{
+		perror("client");
+		return 0;
+	}
+
+    menuLogin(sock);
+
+
+    close(sock);
+    return 0; 
 }

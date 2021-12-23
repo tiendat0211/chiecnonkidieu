@@ -5,11 +5,14 @@
 #include "user.h"
 
 
-Data createData(char *username, char *password, char *isSignIn) {
+Data createData(char *username, char *password, int isSignIn, int score, int turn, int sumfalse) {
   Data data;
   strcpy(data.username, username);
   strcpy(data.password, password);
-  strcpy(data.isSignIn, isSignIn);
+  data.isSignIn = isSignIn;
+  data.score = score;
+  data.turn = score;
+  data.sumfalse = score;
   return data;
 }
 
@@ -104,7 +107,8 @@ void writeFile(Node head, char *fileName) {
 
   Node p;
   for(p = head; p != NULL; p = p->next) {
-    fprintf(f, "%s\t%s\t%s\n", p->data.username, p->data.password, p->data.isSignIn);
+    fprintf(f, "%s \t %s \t %d \t %d \t %d \t %d\n", p->data.username, p->data.password, p->data.isSignIn,p->data.score,
+                                            p->data.turn,p->data.sumfalse);
   }
   fclose(f);
 }
@@ -121,7 +125,8 @@ Node updateAt(Node head, int index, Data newData) {
 }
 
 Node setup(char *fileName) {
-    char username[50],password[50],isSignIn[2];
+    char username[50],password[50];
+    int isSignIn,score,turn,sumfalse;
 
     Data data;
   FILE *f = fopen(fileName, "r");
@@ -132,8 +137,8 @@ Node setup(char *fileName) {
 
     Node head = init();
   
-    while(fscanf(f,"%s %s %s\n",username,password,isSignIn) != EOF){
-        data = createData(username,password,isSignIn);
+    while(fscanf(f,"%s %s %d %d %d %d\n",username,password,&isSignIn,&score,&turn,&sumfalse) != EOF){
+        data = createData(username,password,isSignIn,score,turn,sumfalse);
         head = addTail(head, data);
     }
   fclose(f);
@@ -146,7 +151,10 @@ void printList(Node head){
     while(NULL!=p){
         printf("%s,",p->data.username);
         printf("%s,",p->data.password);
-        printf("%s\n",p->data.isSignIn);
+        printf("%d,",p->data.isSignIn);
+        printf("%d,",p->data.score);
+        printf("%d,",p->data.turn);
+        printf("%d\n",p->data.sumfalse);
         p = p->next;
     }
     printf("\n");
@@ -160,5 +168,21 @@ int checkPassword(Node head, char*username, char* password){
         if(strcmp(d.password,password)==0) return 1;
         else return -1;
     }else return 0;
+}
+
+int sumSingin(Node head){
+  Node p = head;
+  int count = 0;
+  while(NULL!=p){
+    if(p->data.isSignIn==1) count ++;
+    p = p->next;
+  }
+  return count;
+}
+
+void reset(Data data){
+  data.score = 0;
+  data.turn = 0;
+  data.sumfalse = 0;
 }
 

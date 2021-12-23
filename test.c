@@ -4,22 +4,21 @@
 #include <time.h>
 #include <ctype.h>
 
+
+void Updatehidden(char*hidden,char *a,char*answer){
+    for(int i =0;i<strlen(answer);i++){
+        if(answer[i]== a[0] ) hidden[i]=a[0];
+    }
+}
+
 int main(){
-    char buffer[1000]="\0";
-    char s1[50]="Ban ten la gi";
-    char s2[50];
-    char s3[50]="pham tien dat";
-    char chu[10]="\0";
-    char *c;
-    //printf("Nhap cau tra loi : ");
-    //scanf("%[^\n]s",s2);
-    //printf("%s\n%s\n",s2,s3);
-    //fgets(s2,sizeof(s2),stdin);
-    c=strtok(s3," ");
-    printf("%s\n",c);
-    c=strtok(NULL," ");
-    printf("%s\n",c);
-    c=strtok(NULL," ");
-    printf("%s\n",c);
+    char s1[50]="pham tien dat";
+    char s2[50]="**** **** ***";
+    char s[50];
+    strcpy(s,"a");
+    strcat(s,"1");
+    printf("%s\n",s);
+    Updatehidden(s2,s,s1);
+    printf("%s\n",s2);
     
 }

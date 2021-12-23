@@ -45,13 +45,10 @@ int getRandom(int max,int min){
     return min + (int)(rand()*(max-min+1.0)/(1.0+RAND_MAX));
 }
 
-void hiddenAnswer(char *s){
-    for(int i =0; i<strlen(s);i++){
-        if(isalpha(s[i])!=0) s[i]='*';
-    }
-}
 
-void CutQuiz(char *s,char *question, char *answer, char *request){
+
+
+void CutQuiz(char *s,char *question, char *answer,char *request,char*name){
     char*c;
     c = strtok(s,"#");
     strcpy(question,c);
@@ -59,16 +56,21 @@ void CutQuiz(char *s,char *question, char *answer, char *request){
     strcpy(answer,c);
     c= strtok(NULL,"#");
     strcpy(request,c);
+    c= strtok(NULL,"#");
+    strcpy(name,c);
     printf("Cau hoi: %s\n",question);
     printf("Dap an: %s\n",answer);
+    printf("Luot nay cua: %s\n\n",name);
 }
 
-void CutRequest(char *s,char *question, char *answer){
+void CutRequest(char *s,char *question, char *answer,char* username){
     char*c;
     c = strtok(s,"#");
     strcpy(question,c);
     c= strtok(NULL,"#");
     strcpy(answer,c);
+    c= strtok(NULL,"#");
+    strcpy(username,c);
 }
 
 
@@ -82,4 +84,30 @@ int checkAnswer(char *s,char *request, char *hidden){
         }
     }
     return count;
+}
+
+
+void CutWait(char *s,char *sumuser,char*username,char *request){
+    char*c;
+    c = strtok(s,":");
+    strcpy(request,c);
+    c= strtok(NULL,"#");
+    strcpy(sumuser,c);
+    c= strtok(NULL,"#");
+    strcpy(username,c);
+    printf("%s vua tham gia choi\n",username);
+    printf("So luong nguoi choi: %s\n",sumuser);
+   
+}
+
+int nextplayer(int a){
+    if(a==3) return 1;
+    if(a==1) return 2;
+    if(a==2) return 3;
+}
+
+void Updatehidden(char*hidden,char *a,char*answer){
+    for(int i =0;i<strlen(answer);i++){
+        if(answer[i]== a[0] ) hidden[i]=a[0];
+    }
 }
