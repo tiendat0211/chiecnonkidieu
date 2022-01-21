@@ -5,14 +5,12 @@
 #include "user.h"
 
 
-Data createData(char *username, char *password, int isSignIn, int score, int turn, int sumfalse) {
+Data createData(char *username, char *password, int isSignIn, int score) {
   Data data;
   strcpy(data.username, username);
   strcpy(data.password, password);
   data.isSignIn = isSignIn;
   data.score = score;
-  data.turn = score;
-  data.sumfalse = score;
   return data;
 }
 
@@ -107,8 +105,7 @@ void writeFile(Node head, char *fileName) {
 
   Node p;
   for(p = head; p != NULL; p = p->next) {
-    fprintf(f, "%s \t %s \t %d \t %d \t %d \t %d\n", p->data.username, p->data.password, p->data.isSignIn,p->data.score,
-                                            p->data.turn,p->data.sumfalse);
+    fprintf(f, "%s \t %s \t %d \t %d\n", p->data.username, p->data.password, p->data.isSignIn,p->data.score);
   }
   fclose(f);
 }
@@ -126,7 +123,7 @@ Node updateAt(Node head, int index, Data newData) {
 
 Node setup(char *fileName) {
     char username[50],password[50];
-    int isSignIn,score,turn,sumfalse;
+    int isSignIn,score;
 
     Data data;
   FILE *f = fopen(fileName, "r");
@@ -137,8 +134,8 @@ Node setup(char *fileName) {
 
     Node head = init();
   
-    while(fscanf(f,"%s %s %d %d %d %d\n",username,password,&isSignIn,&score,&turn,&sumfalse) != EOF){
-        data = createData(username,password,isSignIn,score,turn,sumfalse);
+    while(fscanf(f,"%s %s %d %d\n",username,password,&isSignIn,&score) != EOF){
+        data = createData(username,password,isSignIn,score);
         head = addTail(head, data);
     }
   fclose(f);
@@ -153,8 +150,6 @@ void printList(Node head){
         printf("%s,",p->data.password);
         printf("%d,",p->data.isSignIn);
         printf("%d,",p->data.score);
-        printf("%d,",p->data.turn);
-        printf("%d\n",p->data.sumfalse);
         p = p->next;
     }
     printf("\n");
@@ -182,7 +177,23 @@ int sumSingin(Node head){
 
 void reset(Data data){
   data.score = 0;
-  data.turn = 0;
-  data.sumfalse = 0;
 }
 
+void swap(Data xp, Data yp)
+{
+    Data temp = xp;
+    xp = yp;
+    yp = temp;
+}
+ 
+void selectionSort(Data arr[], int n)
+{
+    int i, j;
+    for (i = 1; i <= n; i++) {
+      for (j = i + 1; j < n; j++){
+        if (arr[j].score > arr[i].score){
+          swap(arr[i], arr[j]);
+        }   
+      }
+    }
+}

@@ -2,6 +2,8 @@
 #define __MENU_H__
 
 void menuLogin(int sockfd);
-void menuPlay();
+void menuPlay(int sockfd, char *username, char *password);
+
+void display();
 
 #endif

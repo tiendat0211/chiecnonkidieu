@@ -6,8 +6,6 @@ typedef struct {
   char password[100];
   int isSignIn;
   int score;
-  int turn;
-  int sumfalse;
 }Data;
 
 struct User{
@@ -16,7 +14,7 @@ struct User{
 };
 typedef struct User *Node;
 
-Data createData(char *username, char *password,int isSignIn,int score, int turn, int sumfalse);
+Data createData(char *username, char *password,int isSignIn,int score);
 Node setup(char *fileName);
 Node createNode(Data data);
 Node init();
@@ -34,6 +32,10 @@ void printList(Node head);
 int sumSingin(Node head);
 void reset(Data data);
 void userplay(Data play[]);
+void getScore(Node head,char*username);
+
+void swap(Data xp, Data yp);
+void selectionSort(Data arr[], int n);
 
 
 #endif

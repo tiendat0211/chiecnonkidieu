@@ -1,6 +1,7 @@
-datpt 	 0211 	 1 	 0 	 0 	 0
-nam 	 123 	 1 	 0 	 0 	 0
-tuananh 	 123 	 0 	 0 	 0 	 0
-huyen 	 2323 	 1 	 0 	 0 	 0
-test 	 123 	 0 	 0 	 0 	 0
-test1 	 123 	 0 	 0 	 0 	 0
+datpt 	 0211 	 1 	 0
+nam 	 123 	 1 	 2400
+tuananh 	 123 	 0 	 0
+huyen 	 2323 	 1 	 1200
+test 	 123 	 0 	 0
+test1 	 123 	 0 	 0
+hihi 	 123 	 0 	 0

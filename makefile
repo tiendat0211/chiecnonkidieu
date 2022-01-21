@@ -4,10 +4,10 @@ LIBS =  -lm
 
 all: client server
 
-client: client.o menu.o handle.o
-	${CC} client.o  handle.o  menu.o -o client
+client: client.o menu.o handle.o rank.o
+	${CC} client.o  handle.o  menu.o rank.o -o client
 
-server: server.o user.o handle.o question.o
+server: server.o user.o handle.o question.o 
 	${CC} server.o user.o handle.o question.o -o server
 
 server.o: server.c
@@ -27,6 +27,10 @@ menu.o: menu.c
 
 question.o: question.c	
 	${CC} ${CFLAGS} question.c
+
+rank.o: rank.c	
+	${CC} ${CFLAGS} rank.c
+
 
 clean:
 	rm -f *.o *~

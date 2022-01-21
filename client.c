@@ -12,6 +12,7 @@
 
 #include "handle.h"
 #include "menu.h"
+#include "rank.h"
 
 #define MAXLINE 250
 #define SA struct sockaddr
