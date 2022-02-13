@@ -4,14 +4,14 @@
 
 #include "rank.h"
 
-Rank createData(char *username, int score) {
+Rank createDataR(char *username, int score) {
   Rank data;
   strcpy(data.username, username);
   data.score = score;
   return data;
 }
 
-URank createNode(Rank data) {
+URank createNodeR(Rank data) {
   URank temp;
   temp = (URank)malloc(sizeof(struct Link));
   temp->next = NULL;
@@ -19,14 +19,14 @@ URank createNode(Rank data) {
   return temp;
 }
 
-URank init() {
+URank initR() {
   URank head;
   head = NULL;
   return head;
 }
 
-URank addHead(URank head, Rank data) {
-  URank temp = createNode(data); 
+URank addHeadR(URank head, Rank data) {
+  URank temp = createNodeR(data); 
   if(head == NULL) {
     head = temp;
   }else{
@@ -36,9 +36,9 @@ URank addHead(URank head, Rank data) {
   return head;
 }
 
-URank addTail(URank head, Rank data) {
+URank addTailR(URank head, Rank data) {
   URank temp,p;
-  temp = createNode(data);
+  temp = createNodeR(data);
   if(head == NULL) {
     head = temp;
   }
@@ -52,7 +52,7 @@ URank addTail(URank head, Rank data) {
   return head;
 }
 
-URank getNode(URank head, int index) {
+URank getNodeR(URank head, int index) {
   int k = 0;
   URank p = head;
   while(p->next != NULL && k != index) {
@@ -62,7 +62,7 @@ URank getNode(URank head, int index) {
   return p;
 }
 
-Rank getData(URank head, int index) {
+Rank getDataR(URank head, int index) {
   int k = 0;
   URank p = head;
   while(p->next != NULL && k != index) {
@@ -72,16 +72,14 @@ Rank getData(URank head, int index) {
   return p->data;
 }
 
-void writeFile(URank head, char *fileName) {
-  FILE *f = fopen(fileName, "w");
+void writef(Rank data, char *fileName) {
+  FILE *f = fopen(fileName, "a");
   if (f == NULL) {
     exit(0);
   }
 
-  URank p;
-  for(p = head; p != NULL; p = p->next) {
-    fprintf(f, "%s \t %d\n", p->data.username,p->data.score);
-  }
+  fprintf(f, "%s \t %d\n", data.username,data.score);
+  
   fclose(f);
 }
 
@@ -96,11 +94,11 @@ URank readf(char *fileName) {
     exit(0);
   }
 
-    URank head = init();
+    URank head = initR();
   
     while(fscanf(f,"%s %d\n",username,&score) != EOF){
-        data = createData(username,score);
-        head = addTail(head, data);
+        data = createDataR(username,score);
+        head = addTailR(head, data);
     }
   fclose(f);
   return head;
@@ -108,24 +106,74 @@ URank readf(char *fileName) {
 
 void printRank(URank head){
   system("clear");
-  printf("==========================================================================\n");
-  printf("=                          Chiec non ki dieu                             =\n");
-  printf("==========================================================================\n");
-  printf("=                                                                        =\n");
-  printf("=                                                                        =\n");
-  printf("= \t \t \t Bang xep hang \t \t \t \t \t =\n");
-  printf("=                                                                        =\n");
-  printf("=                                                                        =\n");
+  printf("========================================================================\n");
+  printf("                         Chiec non ki dieu                              \n");
+  printf("========================================================================\n");
+  printf("                                                                        \n");
+  printf("                                                                        \n");
+  printf("\t \t \t Bang xep hang \t \t \t \t \t \n");
+  printf("                                                                        \n");
+  printf("                                                                        \n");
   URank p = head;
   int idx = 1;
-  while(NULL!=p){
-    printf("= \t \t \t %d.%s: ",idx,p->data.username);
-    printf("%d\t \t \t \t \t =\n",p->data.score);
+  while(NULL!=p&&idx<=10){
+    printf("\t \t \t %d.%s: ",idx,p->data.username);
+    printf("%d\t \t \t \t \t \n",p->data.score);
     p = p->next;
     idx++;
   }
-  printf("=                                                                        =\n");
-  printf("=                                                                        =\n");
-  printf("==========================================================================\n");
+  printf("                                                                        \n");
+  printf("                                                                        \n");
+  printf("========================================================================\n");
   printf("\n");
+}
+
+void bubbleSort(URank start)
+{
+    int swapped, i;
+    URank ptr1;
+    URank lptr = NULL;
+  
+    /* Checking for empty list */
+    if (start == NULL)
+        return;
+  
+    do
+    {
+        swapped = 0;
+        ptr1 = start;
+  
+        while (ptr1->next != lptr)
+        {
+            if (ptr1->data.score < ptr1->next->data.score)
+            { 
+                swap(ptr1, ptr1->next);
+                swapped = 1;
+            }
+            ptr1 = ptr1->next;
+        }
+        lptr = ptr1;
+    }
+    while (swapped);
+}
+  
+/* function to swap data of two nodes a and b*/
+void swap(URank a, URank b)
+{
+    Rank temp = a->data;
+    a->data = b->data;
+    b->data = temp;
+}
+
+void writeFR(URank head, char *fileName) {
+  FILE *f = fopen(fileName, "w");
+  if (f == NULL) {
+    exit(0);
+  }
+
+  URank p;
+  for(p = head; p != NULL; p = p->next) {
+    fprintf(f, "%s \t %d\n", p->data.username,p->data.score);
+  }
+  fclose(f);
 }

@@ -12,14 +12,22 @@ struct Link{
 };
 typedef struct Link *URank;
 
-Rank createData(char *username,int score);
+Rank createDataR(char *username,int score);
+
 URank readf(char *fileName);
-URank createNode(Rank data);
-URank init();
-URank addHead(URank head, Rank data);
-URank addTail(URank head, Rank data);
-URank getNode(URank head, int index);
-Rank getData(URank head, int index);
+URank createNoderR(Rank data);
+URank initR();
+URank addHeadR(URank head, Rank data);
+URank addTailR(URank head, Rank data);
+URank getNodeR(URank head, int index);
+Rank getDataR(URank head, int index);
 void printRank(URank head);
+
+void writef(Rank data, char *fileName);
+
+void bubbleSort(URank start);
+void swap(URank a,URank b);
+void writeFR(URank head, char *fileName);
+
 
 #endif

@@ -179,21 +179,10 @@ void reset(Data data){
   data.score = 0;
 }
 
-void swap(Data xp, Data yp)
+int compare(const void *s1, const void *s2)
 {
-    Data temp = xp;
-    xp = yp;
-    yp = temp;
-}
- 
-void selectionSort(Data arr[], int n)
-{
-    int i, j;
-    for (i = 1; i <= n; i++) {
-      for (j = i + 1; j < n; j++){
-        if (arr[j].score > arr[i].score){
-          swap(arr[i], arr[j]);
-        }   
-      }
-    }
+  Data *d1 = ( Data *)s1;
+  Data *d2 = (Data *)s2;
+  
+  return d1->score - d2->score;
 }

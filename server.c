@@ -20,6 +20,7 @@
 #include "user.h"
 #include "handle.h"
 #include "question.h"
+#include "rank.h"
 
 
 #define MAXLINE 500
@@ -117,6 +118,9 @@ void Sansang(int connfd,Quiz qhead,char*request,Node head){
             strcat(buffer,score);
             strcat(buffer,"#");
         }
+        
+        strcat(buffer,question[round-1].answer);
+        strcat(buffer,"#");
         printf("S->C: ");
         puts(buffer);
         send(connfd, buffer, strlen(buffer), 0);//gui cau hoi
@@ -153,7 +157,7 @@ void Choi(int connfd,char*username,Node head){
        
     }else if(count==3){
         player[count]=newData;
-        printf("%s\n",player[count].username);
+        //printf("%s\n",player[count].username);
         strcat(buffer,"OK:");
         strcat(buffer,numuser);
         strcat(buffer,"#");
@@ -164,9 +168,15 @@ void Choi(int connfd,char*username,Node head){
         }
     }else if(count>3){
         strcat(buffer,"Het cho:");
+        strcat(buffer,numuser);
+        strcat(buffer,"#");
+        strcat(buffer,username);
+        strcat(buffer,"#");
         for(int i=4 ; i<=count ; i++){
             send(idplayer[i], buffer, strlen(buffer), 0);
         }
+        printf("S->C: ");
+        puts(buffer);
     }
 
 }
@@ -218,7 +228,7 @@ void Traloi( Quiz qhead, char *request, Node head){
 
             strcat(buffer,d.question);
             strcat(buffer,"#");
-            strcat(buffer,d.answer);
+            strcat(buffer,d.hidden);
             strcat(buffer,"#");
             strcat(buffer,"1");
             strcat(buffer,"#");
@@ -237,6 +247,8 @@ void Traloi( Quiz qhead, char *request, Node head){
                 strcat(buffer,score);
                 strcat(buffer,"#");
             }
+            strcat(buffer,d.answer);
+            strcat(buffer,"#");
             for(int i=1 ; i<=sumuser ; i++){
                 send(idplayer[i], buffer, strlen(buffer), 0);//gui ket qua cuoi cung chinh xac
             }
@@ -272,6 +284,8 @@ void Traloi( Quiz qhead, char *request, Node head){
                 strcat(buffer,score);
                 strcat(buffer,"#");
             }
+            strcat(buffer,d.answer);
+            strcat(buffer,"#");
             for(int i=1 ; i<=sumuser ; i++){
                 send(idplayer[i], buffer, strlen(buffer), 0);//gui ket qua cuoi cung sai
             }
@@ -317,6 +331,8 @@ void Traloi( Quiz qhead, char *request, Node head){
                 strcat(buffer,score);
                 strcat(buffer,"#");
             }
+            strcat(buffer,d.answer);
+            strcat(buffer,"#");
             for(int i=1 ; i<=sumuser ; i++){
                 send(idplayer[i], buffer, strlen(buffer), 0);//gui so chu giong
             }
@@ -352,6 +368,8 @@ void Traloi( Quiz qhead, char *request, Node head){
                 strcat(buffer,score);
                 strcat(buffer,"#");
             }
+            strcat(buffer,d.answer);
+            strcat(buffer,"#");
             for(int i=1 ; i<=sumuser ; i++){
                 send(idplayer[i], buffer, strlen(buffer), 0);//gui ket qua dap an sai
             }
@@ -388,11 +406,21 @@ void Hetluot(char *request,Quiz qhead,Node head){
 
     int sumuser = sumSingin(head);
     char buffer[MAXLINE + 1]="\0";
+    char score[MAXLINE + 1]="\0";
     Question d;
     int position = checkQuiz(qhead,question);
     d = getDataQuiz(qhead,position);
 
     if(count_hetluot<3){
+
+        //lay diem
+        for (int i=1;i<=3;i++){
+            int check = checkUsername(head,player[i].username);
+            Data d = getData(head,check);
+            player[i].score = d.score;
+            //printf("%d\n",player[i].score);
+        }
+
         playerturn = nextplayer(playerturn);
         strcat(buffer,d.question);
         strcat(buffer,"#");
@@ -406,12 +434,31 @@ void Hetluot(char *request,Quiz qhead,Node head){
         next_user = nextplayer(next_user);
         strcat(buffer,player[next_user].username);
         strcat(buffer,"#");
+
+        for (int i=1;i<=3;i++){
+            strcat(buffer,player[i].username);
+            strcat(buffer," ");
+            sprintf(score,"%d",player[i].score);
+            strcat(buffer,score);
+            strcat(buffer,"#");
+        }
+        strcat(buffer,d.answer);
+        strcat(buffer,"#");
+
         for(int i=1 ; i<=sumuser ; i++){
             send(idplayer[i], buffer, strlen(buffer), 0);//het luot
         }
         printf("S->C: ");
         puts(buffer);
     }else{
+        //lay diem
+        for (int i=1;i<=3;i++){
+            int check = checkUsername(head,player[i].username);
+            Data d = getData(head,check);
+            player[i].score = d.score;
+            //printf("%d\n",player[i].score);
+        }
+
         playerturn = nextplayer(playerturn);
         strcat(buffer,d.question);
         strcat(buffer,"#");
@@ -424,11 +471,23 @@ void Hetluot(char *request,Quiz qhead,Node head){
         playerturn = nextplayer(playerturn);
         strcat(buffer,player[playerturn].username);
         strcat(buffer,"#");
+
+        for (int i=1;i<=3;i++){
+            strcat(buffer,player[i].username);
+            strcat(buffer," ");
+            sprintf(score,"%d",player[i].score);
+            strcat(buffer,score);
+            strcat(buffer,"#");
+        }
+
         for(int i=1 ; i<=sumuser ; i++){
             send(idplayer[i], buffer, strlen(buffer), 0);//het luot
         }
+        strcat(buffer,d.answer);
+        strcat(buffer,"#");
         printf("S->C: ");
         puts(buffer);
+        playerturn=1;
     }
 
     
@@ -444,9 +503,9 @@ void Ketthuc(int connfd,Node head){
     }
 
     char buffer[MAXLINE + 1]="\0";
-    selectionSort(player,3);
+    qsort(player, 4, sizeof(Data), compare);
     
-    for (int i=1;i<=3;i++){
+    for (int i=3;i>=1;i--){
         strcat(buffer,player[i].username);
         strcat(buffer," ");
         sprintf(score,"%d",player[i].score);
@@ -459,8 +518,22 @@ void Ketthuc(int connfd,Node head){
     send(connfd, buffer, strlen(buffer), 0);//gui diem so
 }
 
-void Reset(int connfd,Node head,Quiz qhead,char *username, char *password){
+void Reset(int connfd,Node head,Quiz qhead,URank rhead,char *username, char *password){
+
+    //cap nhat file rank
+    Rank data;
+    for (int i=3;i>=1;i--){
+        if(player[i].score>0){
+            strcpy(data.username,player[i].username);
+            data.score=player[i].score;
+            rhead=addTailR(rhead,data);
+            player[i].score=0;
+        }
+    }
     
+    bubbleSort(rhead);
+    writeFR(rhead,"rank.txt");
+
     //cap nhat file user
     Data newData;
     int position=checkUsername(head,username);
@@ -492,7 +565,25 @@ void Reset(int connfd,Node head,Quiz qhead,char *username, char *password){
     send(connfd, "Reset", 100,0);
 }
 
-void HandleDataFromClient(int connfd,Node head, Quiz qhead){
+void WiewRank(int connfd,URank rhead){
+    char buffer[1000]="\0";
+    URank p = rhead;
+    int idx = 1;
+    char diemso[50]="\0";
+    for(int i = 1 ; i<=10; i++){
+      strcat(buffer,p->data.username);
+      strcat(buffer," ");
+      sprintf(diemso,"%d",p->data.score)  ;
+      strcat(buffer,diemso);
+      strcat(buffer,"#");
+      p = p->next;
+    }
+    send(connfd, buffer, strlen(buffer), 0);//gui bang xep hang
+    printf("S->C: ");
+    puts(buffer);
+}
+
+void HandleDataFromClient(int connfd,Node head, Quiz qhead, URank rhead){
         int n;
         char data[MAXLINE]="\0";
         char username[MAXLINE]="\0";
@@ -528,7 +619,7 @@ void HandleDataFromClient(int connfd,Node head, Quiz qhead){
                 strcpy(username,c);
                 Choi(connfd,username,head);
             }else if (strcmp(c,"San sang")==0){
-                c = strtok(NULL, " ");
+                c = strtok(NULL, "#");
                 strcpy(request,c);
                 Sansang(connfd,qhead,request,head);
             }else if (strcmp(c,"Tra loi")==0){
@@ -540,13 +631,13 @@ void HandleDataFromClient(int connfd,Node head, Quiz qhead){
                 strcpy(request,c);
                 Hetluot(request,qhead,head);
             }else if (strcmp(c,"Xem xep hang")==0){
-                send(connfd,"Xem:1",100,0);
+                WiewRank(connfd,rhead);
             }else if (strcmp(c,"Reset")==0){
                 c = strtok(NULL, " ");
                 strcpy(username,c);
                 c = strtok(NULL, " ");
                 strcpy(password,c);
-                Reset(connfd,head,qhead,username,password);
+                Reset(connfd,head,qhead,rhead,username,password);
             }else if (strcmp(c,"Ket thuc")==0){
                 Ketthuc(connfd,head);
             }
@@ -607,6 +698,7 @@ int main(int argc, char* argv[]){
     //Step 4: Communicate with clients
 
     //char fileName[] = "user.txt";
+    URank rhead = readf("rank.txt");
 	Node uhead = setup("user.txt");
     Quiz qhead = readfile("question.txt");
     int sumquiz = sumQuiz(qhead);
@@ -650,7 +742,7 @@ int main(int argc, char* argv[]){
                     }
                 }
                 else{
-                    HandleDataFromClient(i,uhead,qhead);
+                    HandleDataFromClient(i,uhead,qhead,rhead);
                 }
             }
         }

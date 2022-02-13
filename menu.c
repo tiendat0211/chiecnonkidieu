@@ -12,7 +12,7 @@
 #include "handle.h"
 #include "rank.h"
 
-#define MAXLINE 250
+#define MAXLINE 1000
 
 void menuPlay(int sockfd, char *username, char *password){
     char a[2];
@@ -31,11 +31,11 @@ void menuPlay(int sockfd, char *username, char *password){
     char name2[MAXLINE + 1]="\0";
     char round[MAXLINE + 1]="\0";
     char mess[MAXLINE + 1]="\0";
+    char dapan[MAXLINE + 1]="\0";
     int countround = 1;
     int check = 1;
     int failed = 0;
-    int vongquay[10]={50,100,200,500,-1,50,100,200,500,1};
-    URank rank = readf("rank.txt");
+    int vongquay[10]={50,100,200,500,-1,50,100,200,500,1000};
     do{
         system("clear");
         printf("========================================================================\n");
@@ -43,9 +43,9 @@ void menuPlay(int sockfd, char *username, char *password){
         printf("========================================================================\n");
         printf("                                                                        \n");
         printf("                                                                        \n");
-        printf(" \t \t \t 1.Choi \t \t \t \t \t \n");
-        printf(" \t \t \t 2.Xem bang xep hang \t \t \t \t \n");
-        printf(" \t \t \t 3.Dang xuat \t \t \t \t \t \n");
+        printf("\t \t \t1.Choi \t \t \t \t \t \n");
+        printf("\t \t \t2.Xem bang xep hang \t \t \t \t \n");
+        printf("\t \t \t3.Dang xuat \t \t \t \t \t \n");
         if(strcmp(mess,"\0")!=0){
             printf("                                                                        \n");
             printf("                                                                        \n");
@@ -78,31 +78,45 @@ void menuPlay(int sockfd, char *username, char *password){
                         printf("========================================================================\n");
                         printf("                                                                        \n");
                         printf("                                                                        \n");
-                        printf(" \t \t Ban vua tham gia phong \t \t \t \t \n");
-                        printf(" \t \t Hay doi %d nguoi tham gia phong \t \t \t \n",(3-a));
+                        printf("\t \t Ban vua tham gia phong \t \t \t \t \n");
+                        printf("\t \t Hay doi %d nguoi tham gia phong \t \t \t \n",(3-a));
                     }else if(strcmp(request,"OK")==0){
-                        printf(" \t \t Phong da du nguoi \t \t \t \t \t \n");
+                        printf("\n");
+                        printf("\t \t Phong da du nguoi \t \t \t \t \t \n");
                         sleep(2);
                         do{
                             strcpy(buffer,"\0");
                             strcat(buffer,"San sang:");
                             sprintf(round,"%d",countround);
                             strcat(buffer,round);
+                            strcat(buffer,"#");
+                            strcat(buffer,username);
+                            strcat(buffer,"#");
                             send(sockfd,buffer,strlen(buffer),0);
-                            do{     
+                            while(1){     
                                 n = recv(sockfd, receiveLine, MAXLINE, 0);
                                 receiveLine[n] = '\0'; //null terminate 
                                 //printf("%s\n",receiveLine);
-                                CutQuiz(receiveLine,question,answer,request,name1,name2,countround,username);
-
+                                CutQuiz(receiveLine,question,answer,request,name1,name2,countround,username,dapan);
                                 if(strcmp(username,name1)==0){
-                                    //while(1){
                                         printf("\n");
-                                        printf("\t Luot: %d\n",failed+1);
+                                        printf("\t Ban con %d luot tra loi\n",3-failed);
                                         if(failed < 3){
                                             if(strcmp(request,"1")==0){
-                                                printf("\t Dap an cuoi cung chinh xac\n");
-                                                sleep(2);
+                                                    system("clear");
+                                                    printf("========================================================================\n");
+                                                    printf("                          Chiec non ki dieu                             \n");
+                                                    printf("========================================================================\n");
+                                                    printf("\n");
+                                                    printf("\n");
+                                                    printf("\t \t \t      Vong %d\n",countround);
+                                                    printf("\n");
+                                                    printf("Cau hoi: %s\n",question);
+                                                    printf("\n");
+                                                    printf("\t \t Dap an cuoi cung: %s\n",dapan);
+                                                    printf("\n");
+                                                    printf("An mot phim bat ky de tiep tuc...");
+                                                    gets(b);
                                                 break;
                                             }else if(strcmp(request,"-100")==0){
                                                 printf("\t %s: Dap an cuoi cung sai\n",name2);
@@ -112,6 +126,10 @@ void menuPlay(int sockfd, char *username, char *password){
                                                 printf("\t %s: khong tra loi chinh xac chu cai nao\n",name2);
                                             }else if(strcmp(request,"-1000")==0){
                                                 printf("\t Tat ca da het luot doan\n");
+                                                printf("\n");
+                                                printf("\t \t Dap an cuoi cung: %s",dapan);
+                                                printf("An mot phim bat ky de tiep tuc...");
+                                                gets(b);
                                                 break;
                                             }else{
                                                 printf("\t Ban vua danh duoc so diem: %s\n",request);
@@ -134,13 +152,18 @@ void menuPlay(int sockfd, char *username, char *password){
                                                 strcat(buffer,"Tra loi:");
                                                 strcat(buffer,question);
                                                 strcat(buffer,"#");
-                                                strcat(buffer,answer);
+
+                                                if(strcmp(answer,"\0")!=0){
+                                                    strcat(buffer,answer);
+                                                }else strcat(buffer,"0");
+
                                                 strcat(buffer,"#");
                                                 strcat(buffer,username);
                                                 strcat(buffer,"#");
                                                 strcat(buffer,"0");
                                                 strcat(buffer,"#@");
                                                 send(sockfd,buffer,strlen(buffer),0);
+                                                failed--;
                                             }else if(score==-1){
                                                 printf("Ban quay vao o: Mat luot\n");
                                                 strcpy(buffer,"\0");
@@ -155,6 +178,7 @@ void menuPlay(int sockfd, char *username, char *password){
                                                 strcat(buffer,"0");
                                                 strcat(buffer,"#@");
                                                 send(sockfd,buffer,strlen(buffer),0);
+                                                sleep(1);
                                             }else{
                                                 printf("Ban quay vao o: %d diem\n",score);
                                                 printf("\n");
@@ -165,7 +189,11 @@ void menuPlay(int sockfd, char *username, char *password){
                                                 strcat(buffer,"Tra loi:");
                                                 strcat(buffer,question);
                                                 strcat(buffer,"#");
-                                                strcat(buffer,answer);
+
+                                                if(strcmp(answer,"\0")!=0){
+                                                    strcat(buffer,answer);
+                                                }else strcat(buffer,"0");
+                                                
                                                 strcat(buffer,"#");
                                                 strcat(buffer,username);
                                                 strcat(buffer,"#");
@@ -174,6 +202,7 @@ void menuPlay(int sockfd, char *username, char *password){
                                                 send(sockfd,buffer,strlen(buffer),0);
                                             }  
                                         }else if(failed>=3){
+                                            printf("%d\n",failed);
                                             if(strcmp(request,"-1000")==0) {
                                                 printf("\t Tat ca da het luot doan\n");
                                                 break;
@@ -186,13 +215,28 @@ void menuPlay(int sockfd, char *username, char *password){
                                                 strcat(buffer,question);
                                                 strcat(buffer,"#@");
                                                 send(sockfd,buffer,strlen(buffer),0);
+                                                break;
                                             }
                                         }
                                     //}
                                 }else if(strcmp(username,name2)==0){
                                     if(strcmp(request,"1")==0){
+                                        system("clear");
+                                        printf("========================================================================\n");
+                                        printf("                          Chiec non ki dieu                             \n");
+                                        printf("========================================================================\n");
+                                        printf("\n");
+                                        printf("\n");
+                                        printf("\t \t \t      Vong %d\n",countround);
+                                        printf("\n");
                                         printf("\t %s: Dap an cuoi cung chinh xac\n",name1);
-                                        sleep(2);
+                                        printf("\n");
+                                        printf("Cau hoi: %s\n",question);
+                                        printf("\n");
+                                        printf("\t \t Dap an cuoi cung: %s\n",dapan);
+                                        printf("\n");
+                                        printf("An mot phim bat ky de tiep tuc...");
+                                        gets(b);
                                         break;
                                     }else if(strcmp(request,"-100")==0){
                                         printf("\t %s: Dap an cuoi cung sai\n",name2);
@@ -204,6 +248,7 @@ void menuPlay(int sockfd, char *username, char *password){
                                         failed++;
                                     }else if(strcmp(request,"-1000")==0){
                                         printf("\t Tat ca da het luot doan\n");
+                                        sleep(2);
                                         break;
                                     }else{
                                         printf("\t %s: Danh duoc so diem: %s\n",name1,request);
@@ -211,8 +256,22 @@ void menuPlay(int sockfd, char *username, char *password){
                                     printf("\t Hay doi den luot cua ban\n");
                                 }else if(strcmp(username,name2)!=0 && strcmp(username,name1)!=0){
                                     if(strcmp(request,"1")==0){
+                                        system("clear");
+                                        printf("========================================================================\n");
+                                        printf("                          Chiec non ki dieu                             \n");
+                                        printf("========================================================================\n");
+                                        printf("\n");
+                                        printf("\n");
+                                        printf("\t \t \t      Vong %d\n",countround);
+                                        printf("\n");
                                         printf("\t %s: Dap an cuoi cung chinh xac\n",name1);
-                                        sleep(2);
+                                        printf("\n");
+                                        printf("Cau hoi: %s\n",question);
+                                        printf("\n");
+                                        printf("\t \t Dap an cuoi cung: %s\n",dapan);
+                                        printf("\n");
+                                        printf("An mot phim bat ky de tiep tuc...");
+                                        gets(b);
                                         break;
                                     }else if(strcmp(request,"-100")==0){
                                         printf("\t %s: Dap an cuoi cung sai\n",name2);
@@ -224,18 +283,75 @@ void menuPlay(int sockfd, char *username, char *password){
                                         
                                     }else if(strcmp(request,"-1000")==0){
                                         printf("\t Tat ca da het luot doan\n");
+                                        sleep(2);
                                         break;
                                     }else{
                                         printf("\t %s: Danh duoc so diem: %s\n",name1,request);
                                     }
                                     printf("\t Hay doi den luot cua ban\n");
-                                }
-                                
-                            }while(strcmp(request,"100")!=0);
+                                }  
+                            }
                             failed = 0;
                             countround++;//next round
+                        
                         }while(countround<=3);  
                         if(countround == 4) check = 0;
+                    }else if(strcmp(request,"Het cho")==0){
+                        printf("\t \t Phong da day nguoi choi\n");
+                        printf("\n");
+                        printf("\t \t Ban co muon vao xem khong(C/K).... ");
+                        gets(b);
+                        if(strcmp(b,"c")==0||strcmp(b,"C")==0||strcmp(b,"co")==0||strcmp(b,"Co")==0){
+                            strcpy(buffer,"\0");
+                            strcat(buffer,"San sang:");
+                            sprintf(round,"%d",countround);
+                            strcat(buffer,round);
+                            strcat(buffer,"#");
+                            strcat(buffer,username);
+                            strcat(buffer,"#");
+                            send(sockfd,buffer,strlen(buffer),0);
+                            while(1){     
+                                n = recv(sockfd, receiveLine, MAXLINE, 0);
+                                receiveLine[n] = '\0'; //null terminate 
+                                CutQuiz(receiveLine,question,answer,request,name1,name2,countround,username,dapan);
+                                if(strcmp(request,"1")==0){
+                                    system("clear");
+                                    printf("========================================================================\n");
+                                    printf("                          Chiec non ki dieu                             \n");
+                                    printf("========================================================================\n");
+                                    printf("\n");
+                                    printf("\n");
+                                    printf("\t \t \t      Vong %d\n",countround);
+                                    printf("\n");
+                                    printf("\t %s: Dap an cuoi cung chinh xac\n",name1);
+                                    printf("\n");
+                                    printf("Cau hoi: %s\n",question);
+                                    printf("\n");
+                                    printf("\t \t Dap an cuoi cung: %s\n",dapan);
+                                    printf("\n");
+                                    printf("An mot phim bat ky de tiep tuc...");
+                                    gets(b);
+                                    break;
+                                }else if(strcmp(request,"-100")==0){
+                                    printf("\t %s: Dap an cuoi cung sai\n",name2);
+                                            
+                                }else if(strcmp(request,"10")==0){
+                                    printf("\n");
+                                }else if(strcmp(request,"0")==0){
+                                    printf("\t %s: khong tra loi chinh xac chu cai nao\n",name2);
+                                            
+                                }else if(strcmp(request,"-1000")==0){
+                                    printf("\t Tat ca da het luot doan\n");
+                                    sleep(2);
+                                    break;
+                                }else{
+                                    printf("\t %s: Danh duoc so diem: %s\n",name1,request);
+                                }
+                            }
+                        }else{
+                            printf("\t Cam on ban!!\n");
+                            menuLogin(sockfd);
+                        }
                     }
                 }while(check!=0);
 
@@ -268,13 +384,11 @@ void menuPlay(int sockfd, char *username, char *password){
                 strcpy(buffer,"\0");
                 strcat(buffer,"Xem xep hang:");
                 send(sockfd,buffer,strlen(buffer),0);
-                n = recv(sockfd, receiveLine, MAXLINE, 0);
+                n = recv(sockfd, receiveLine, 1000, 0);
                 receiveLine[n] = '\0'; //null terminate  
-                if(strcmp(receiveLine,"Xem:1") == 0){
-                    printRank(rank);
-                    printf("\t Nhan phim bat ki de quay lai... \t");
-                    gets(b);
-                }
+                CutRank(receiveLine);
+                printf("\t Nhan phim bat ki de quay lai... \t");
+                gets(b);
             break;
             case 3:
                 strcpy(buffer,"\0");
@@ -310,9 +424,9 @@ void menuLogin(int sockfd){
         printf("========================================================================\n");
         printf("                                                                        \n");
         printf("                                                                        \n");
-        printf(" \t \t \t \t 1.Dang nhap \t \t \t \t \n");
-        printf(" \t \t \t \t 2.Dang ky \t \t \t \t \n");
-        printf(" \t \t \t \t 3.Thoat \t \t \t \t \n");
+        printf("\t \t \t \t1.Dang nhap \t \t \t \t \n");
+        printf("\t \t \t \t2.Dang ky \t \t \t \t \n");
+        printf("\t \t \t \t3.Thoat \t \t \t \t \n");
         if(strcmp(mess,"\0")!=0){
             printf("                                                                        \n");
             printf("                                                                        \n");
@@ -337,7 +451,7 @@ void menuLogin(int sockfd){
                 printf("========================================================================\n");
                 printf("                                                                        \n");
                 printf("                                                                        \n");
-                printf(" \t \t \t \t Dang nhap \t \t \t \t \n");
+                printf("\t \t \t \t Dang nhap \t \t \t \t \n");
                 if(strcmp(mess,"\0")!=0){
                     printf("                                                                        \n");
                     printf("                                                                        \n");
@@ -381,7 +495,7 @@ void menuLogin(int sockfd){
                     printf("=========================================================================\n");
                     printf("                                                                        \n");
                     printf("                                                                        \n");
-                    printf(" \t \t \t \t Dang ky \t \t \t \t \n");
+                    printf("\t \t \t \t Dang ky \t \t \t \t \n");
                     if(strcmp(mess,"\0")!=0){
                         printf("                                                                        \n");
                         printf("                                                                        \n");

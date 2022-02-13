@@ -13,7 +13,6 @@ void EnterUsername(char * s){
     printf(" \t Ten dang nhap : ");
     //scanf("%[^\n]s",s);
     gets(s);
-
 }
 
 
@@ -60,10 +59,10 @@ void CutScore(char* s){
     strcpy(username,c);
     c = strtok(NULL," ");
     strcpy(score,c);
-    printf(" \t \t \t      %s: %s\n",username,score);
+    printf("%s: %s\n",username,score);
 }
 
-void CutQuiz(char *s,char *question, char *answer,char *request,char*name1,char*name2,int round,char* username){
+void CutQuiz(char *s,char *question, char *answer,char *request,char*name1,char*name2,int round,char* username, char* dapan){
     char*c;
     char user_score1[100]="\0";
     char user_score2[100]="\0";
@@ -86,6 +85,9 @@ void CutQuiz(char *s,char *question, char *answer,char *request,char*name1,char*
     
     c= strtok(NULL,"#");
     strcpy(user_score3,c);
+    c= strtok(NULL,"#");
+    strcpy(dapan,c);
+    
     system("clear");
     printf("========================================================================\n");
     printf("                          Chiec non ki dieu                             \n");
@@ -96,8 +98,11 @@ void CutQuiz(char *s,char *question, char *answer,char *request,char*name1,char*
     printf("\t \t \t      Vong %d\n",round);
     printf("\n");
     printf(" \t \t \t Diem so hien tai \n\n");
+    printf(" \t \t \t      ");
     CutScore(user_score1);
+    printf(" \t \t \t      ");
     CutScore(user_score2);
+    printf(" \t \t \t      ");
     CutScore(user_score3);
     printf("\n");
     printf(" \t \t \t Luot nay cua: %s\n\n",name1);
@@ -164,10 +169,89 @@ void CutFinal(char *s){
     printf("========================================================================\n");
     printf("\n");
     printf("\n");
-    printf(" \t \t \t Ket qua cuoi cung \n\n");
+    printf("\t \t \t  Ket qua cuoi cung \n\n");
+    printf("\t \t \t    1. ");
     CutScore(user_score1);
+    printf("\t \t \t    2. ");
     CutScore(user_score2);
+    printf("\t \t \t    3. ");
     CutScore(user_score3);
+    printf("\n");
+    printf("\n");
+    printf("========================================================================\n");
+}
+
+void CutRank(char *s){
+    char*c;
+    char user_score1[100]="\0";
+    char user_score2[100]="\0";
+    char user_score3[100]="\0";
+    char user_score4[100]="\0";
+    char user_score5[100]="\0";
+    char user_score6[100]="\0";
+    char user_score7[100]="\0";
+    char user_score8[100]="\0";
+    char user_score9[100]="\0";
+    char user_score10[100]="\0";
+
+    c= strtok(s,"#");
+    strcpy(user_score1,c);
+  
+    c= strtok(NULL,"#");
+    strcpy(user_score2,c);
+    
+    c= strtok(NULL,"#");
+    strcpy(user_score3,c);
+
+    c= strtok(NULL,"#");
+    strcpy(user_score4,c);
+    
+    c= strtok(NULL,"#");
+    strcpy(user_score5,c);
+    
+    c= strtok(NULL,"#");
+    strcpy(user_score6,c);
+
+    c= strtok(NULL,"#");
+    strcpy(user_score7,c);
+    
+    c= strtok(NULL,"#");
+    strcpy(user_score8,c);
+    
+    c= strtok(NULL,"#");
+    strcpy(user_score9,c);
+
+    c= strtok(NULL,"#");
+    strcpy(user_score10,c);
+    printf("%s\n",user_score10);
+
+    system("clear");
+    printf("========================================================================\n");
+    printf("                          Chiec non ki dieu                             \n");
+    printf("========================================================================\n");
+    printf("\n");
+    printf("\n");
+    printf("\t \t \t Bang xep hang \n\n");
+    printf("\t \t \t  1. ");
+    CutScore(user_score1);
+    printf("\t \t \t  2. ");
+    CutScore(user_score2);
+    printf("\t \t \t  3. ");
+    CutScore(user_score3);
+    printf("\t \t \t  4. ");
+    CutScore(user_score4);
+    printf("\t \t \t  5. ");
+    CutScore(user_score5);
+    printf("\t \t \t  6. ");
+    CutScore(user_score6);
+    printf("\t \t \t  7. ");
+    CutScore(user_score7);
+    printf("\t \t \t  8. ");
+    CutScore(user_score8);
+    printf("\t \t \t  9. ");
+    CutScore(user_score9);
+    printf("\t \t \t  10. ");
+    CutScore(user_score10);
     printf("\n");
     printf("\n");
     printf("========================================================================\n");

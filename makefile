@@ -7,8 +7,8 @@ all: client server
 client: client.o menu.o handle.o rank.o
 	${CC} client.o  handle.o  menu.o rank.o -o client
 
-server: server.o user.o handle.o question.o 
-	${CC} server.o user.o handle.o question.o -o server
+server: server.o user.o handle.o question.o rank.o
+	${CC} server.o user.o handle.o question.o rank.o -o server
 
 server.o: server.c
 	${CC} ${CFLAGS} server.c

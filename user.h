@@ -34,8 +34,7 @@ void reset(Data data);
 void userplay(Data play[]);
 void getScore(Node head,char*username);
 
-void swap(Data xp, Data yp);
-void selectionSort(Data arr[], int n);
+int compare(const void *s1, const void *s2);
 
 
 #endif
