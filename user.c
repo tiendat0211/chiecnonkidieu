@@ -88,6 +88,18 @@ int checkUsername(Node head, char *name) {
   return -1;
 }
 
+int checkSignin(Node head, char *name) {
+  for(Node p = head; p != NULL; p = p->next) {
+    if(strcmp(p->data.username, name) == 0) {
+      if (p->data.isSignIn==1)
+      {
+        return 1;// da dang nhap
+      }
+    }
+  }
+  return -1;
+}
+
 void destroy(Node head) {
   Node tmp;
   while (head != NULL) {

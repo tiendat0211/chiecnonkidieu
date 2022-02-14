@@ -25,6 +25,7 @@ Data getData(Node head, int index);
 Node updateAt(Node head, int index, Data newData);
 int search(Node head, Data data);
 int checkUsername(Node head, char *name);
+int checkSignin(Node head, char *name);
 void writeFile(Node head, char *fileName);
 void destroy(Node head);
 int checkPassword(Node head, char*username,char* password);

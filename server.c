@@ -51,10 +51,16 @@ void CutRequest(char *s,char *question, char *answer,char* username,char* score)
 
 void Dangnhap(int connfd, Node head, char *username, char *password){
     int position=checkUsername(head,username);
+    int isSignin=checkSignin(head,username);
     if(position >= 0){
-        if(checkPassword(head,username,password)==1){
-            send(connfd, "1", 100, 0);
-        }else send(connfd, "-1", 100, 0); //mat khau sai
+        if(isSignin==1){
+            send(connfd, "100", 100, 0);//da dang nhap
+        }else if (isSignin==-1)
+        {
+            if(checkPassword(head,username,password)==1){
+                send(connfd, "1", 100, 0);
+            }else send(connfd, "-1", 100, 0); //mat khau sai
+        }  
     }else send(connfd, "0", 100, 0);// khong tim thay tai khoan
 }
 

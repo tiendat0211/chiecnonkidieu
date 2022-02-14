@@ -1,4 +1,4 @@
-datpt 	 0211 	 0 	 0
+datpt 	 0211 	 1 	 0
 nam 	 123 	 0 	 0
 tuananh 	 123 	 0 	 0
 huyen 	 2323 	 0 	 0

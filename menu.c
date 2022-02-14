@@ -474,15 +474,18 @@ void menuLogin(int sockfd){
                 //printf("%s\n",receiveLine);
                 if(strcmp(receiveLine,"1") == 0){
                     menuPlay(sockfd,username,password);
-                    sleep(2);
+                    sleep(1);
                     break;             
                 }else if(strcmp(receiveLine,"-1") == 0){
                     strcpy(mess,"Mat khau khong chinh xac");
-                    sleep(2);
+                    sleep(0.5);
                     
                 }else if(strcmp(receiveLine,"0") == 0){
                     strcpy(mess,"Khong tim thay tai khoan");
-                    sleep(2);
+                    sleep(0.5);
+                }else if(strcmp(receiveLine,"100") == 0){
+                    strcpy(mess,"Tai khoan da duoc dang nhap");
+                    sleep(0.5);
                 }
             } 
                 break;    
