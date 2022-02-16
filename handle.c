@@ -59,7 +59,7 @@ void CutScore(char* s){
     strcpy(username,c);
     c = strtok(NULL," ");
     strcpy(score,c);
-    printf("%s: %s\n",username,score);
+    printf("%s: %s",username,score);
 }
 
 void CutQuiz(char *s,char *question, char *answer,char *request,char*name1,char*name2,int round,char* username, char* dapan){
@@ -93,18 +93,31 @@ void CutQuiz(char *s,char *question, char *answer,char *request,char*name1,char*
     printf("                          Chiec non ki dieu                             \n");
     printf("========================================================================\n");
     printf("\n");
-    printf("\t \t \t Ten nguoi choi: %s\n",username);
-    printf("\n");
-    printf("\t \t \t      Vong %d\n",round);
-    printf("\n");
-    printf(" \t \t \t Diem so hien tai \n\n");
-    printf(" \t \t \t      ");
+    printf("==================\n");
+    printf("     Vong %d \t = \t Ten nguoi choi: %s\n",round,username);
+    printf(" ");
     CutScore(user_score1);
-    printf(" \t \t \t      ");
+    printf(" \t =\n");
+
+    printf(" ");
     CutScore(user_score2);
-    printf(" \t \t \t      ");
+    printf(" \t =\n");
+
+    printf(" ");
     CutScore(user_score3);
+    printf(" \t =\n");
+    printf("==================\n");
+    //printf("\t \t \t      Vong %d\n",round);
+    //printf("\n");
+    //printf(" \t \t \t Diem so hien tai \n\n");
+    //printf(" \t \t \t      ");
+    //CutScore(user_score1);
+    //printf(" \t \t \t      ");
+    //CutScore(user_score2);
+    //printf(" \t \t \t      ");
+    //CutScore(user_score3);
     printf("\n");
+
     printf(" \t \t \t Luot nay cua: %s\n\n",name1);
     printf("Cau hoi: %s\t \n",question);
     printf("\n");
@@ -172,10 +185,13 @@ void CutFinal(char *s){
     printf("\t \t \t  Ket qua cuoi cung \n\n");
     printf("\t \t \t    1. ");
     CutScore(user_score1);
+    printf("\n");
     printf("\t \t \t    2. ");
     CutScore(user_score2);
+    printf("\n");
     printf("\t \t \t    3. ");
     CutScore(user_score3);
+    printf("\n");
     printf("\n");
     printf("\n");
     printf("========================================================================\n");
@@ -234,26 +250,46 @@ void CutRank(char *s){
     printf("\t \t \t Bang xep hang \n\n");
     printf("\t \t \t  1. ");
     CutScore(user_score1);
+    printf("\n");
     printf("\t \t \t  2. ");
     CutScore(user_score2);
+    printf("\n");
     printf("\t \t \t  3. ");
     CutScore(user_score3);
+    printf("\n");
     printf("\t \t \t  4. ");
     CutScore(user_score4);
+    printf("\n");
     printf("\t \t \t  5. ");
     CutScore(user_score5);
+    printf("\n");
     printf("\t \t \t  6. ");
     CutScore(user_score6);
+    printf("\n");
     printf("\t \t \t  7. ");
     CutScore(user_score7);
+    printf("\n");
     printf("\t \t \t  8. ");
     CutScore(user_score8);
+    printf("\n");
     printf("\t \t \t  9. ");
     CutScore(user_score9);
+    printf("\n");
     printf("\t \t \t  10. ");
     CutScore(user_score10);
+    printf("\n");
     printf("\n");
     printf("\n");
     printf("========================================================================\n");
 }
 
+void Close(int n){
+    char a;
+    if (n<=0){
+        printf("========================================================================\n");
+        printf("\nLoi!!!!Server da dong\n");
+        printf("An mot phim bat ki de thoat...");
+        gets(a);
+        exit(0);
+    }
+}

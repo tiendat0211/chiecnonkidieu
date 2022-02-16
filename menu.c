@@ -68,6 +68,7 @@ void menuPlay(int sockfd, char *username, char *password){
                 send(sockfd,buffer,strlen(buffer),0);
                 do{
                     n = recv(sockfd, receiveLine, MAXLINE, 0);
+                    Close(n);
                     receiveLine[n] = '\0'; //null terminate 
                     CutWait(receiveLine,sumuser,name1,request);
                     int a = atoi(sumuser);
@@ -95,6 +96,7 @@ void menuPlay(int sockfd, char *username, char *password){
                             send(sockfd,buffer,strlen(buffer),0);
                             while(1){     
                                 n = recv(sockfd, receiveLine, MAXLINE, 0);
+                                Close(n);
                                 receiveLine[n] = '\0'; //null terminate 
                                 //printf("%s\n",receiveLine);
                                 CutQuiz(receiveLine,question,answer,request,name1,name2,countround,username,dapan);
@@ -166,6 +168,8 @@ void menuPlay(int sockfd, char *username, char *password){
                                                 failed--;
                                             }else if(score==-1){
                                                 printf("Ban quay vao o: Mat luot\n");
+                                                printf("An mot phim bat ky de tiep tuc..");
+                                                gets(b);
                                                 strcpy(buffer,"\0");
                                                 strcpy(answer,"\0");
                                                 strcat(buffer,"Tra loi:");
@@ -312,6 +316,7 @@ void menuPlay(int sockfd, char *username, char *password){
                             send(sockfd,buffer,strlen(buffer),0);
                             while(1){     
                                 n = recv(sockfd, receiveLine, MAXLINE, 0);
+                                Close(n);
                                 receiveLine[n] = '\0'; //null terminate 
                                 CutQuiz(receiveLine,question,answer,request,name1,name2,countround,username,dapan);
                                 if(strcmp(request,"1")==0){
@@ -359,6 +364,7 @@ void menuPlay(int sockfd, char *username, char *password){
                 strcat(buffer,"Ket thuc:");
                 send(sockfd,buffer,strlen(buffer),0);
                 n = recv(sockfd, receiveLine, MAXLINE, 0);
+                Close(n);
                 receiveLine[n] = '\0';
                 CutFinal(receiveLine);
                 printf("\t Nhan phim bat ki de thoat... \t");
@@ -372,6 +378,7 @@ void menuPlay(int sockfd, char *username, char *password){
                 strcat(buffer," ");
                 send(sockfd,buffer,strlen(buffer),0);
                 n = recv(sockfd, receiveLine, MAXLINE, 0);
+                Close(n);
                 receiveLine[n] = '\0';
                 if(strcmp(receiveLine,"Reset")==0){
                     //reset all
@@ -385,6 +392,7 @@ void menuPlay(int sockfd, char *username, char *password){
                 strcat(buffer,"Xem xep hang:");
                 send(sockfd,buffer,strlen(buffer),0);
                 n = recv(sockfd, receiveLine, 1000, 0);
+                Close(n);
                 receiveLine[n] = '\0'; //null terminate  
                 CutRank(receiveLine);
                 printf("\t Nhan phim bat ki de quay lai... \t");
@@ -398,6 +406,7 @@ void menuPlay(int sockfd, char *username, char *password){
                 strcat(buffer,password);
                 send(sockfd,buffer,strlen(buffer),0);
                 n = recv(sockfd, receiveLine, MAXLINE, 0);
+                Close(n);
                 receiveLine[n] = '\0'; //null terminate  
                 if(strcmp(receiveLine,"1") == 0){
                     strcpy(mess,"Ban da dang xuat thanh cong");
@@ -470,6 +479,7 @@ void menuLogin(int sockfd){
                 strcat(buffer,password);
                 send(sockfd,buffer,strlen(buffer),0);
                 n = recv(sockfd, receiveLine, MAXLINE, 0);
+                Close(n);
                 receiveLine[n] = '\0'; //null terminate  
                 //printf("%s\n",receiveLine);
                 if(strcmp(receiveLine,"1") == 0){
@@ -522,6 +532,7 @@ void menuLogin(int sockfd){
                     if(check == 0){
                         send(sockfd, buffer, strlen(buffer), 0);
                         n = recv(sockfd, receiveLine, MAXLINE, 0);
+                        Close(n);
                         receiveLine[n] = '\0'; //null terminate 
                         if(strcmp(receiveLine,"1")==0){
                             strcpy(mess,"Ban da dang ky thanh cong");

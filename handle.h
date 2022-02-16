@@ -21,5 +21,6 @@ void CutScore(char* s);
 
 void CutFinal(char *s);
 void CutRank(char *s);
+void Close(int n);
 
 #endif

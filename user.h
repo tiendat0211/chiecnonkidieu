@@ -12,6 +12,7 @@ struct User{
   Data data;
   struct User*next;
 };
+
 typedef struct User *Node;
 
 Data createData(char *username, char *password,int isSignIn,int score);

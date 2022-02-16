@@ -245,7 +245,7 @@ void Traloi( Quiz qhead, char *request, Node head){
             strcat(buffer,player[next_user].username);
 
             strcat(buffer,"#");
-
+            //lay diem
             for (int i=1;i<=3;i++){
                 strcat(buffer,player[i].username);
                 strcat(buffer," ");
